@@ -26,11 +26,11 @@ def get_all_tickers():
     '''
     sp500 = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     ticker_list_500 = sp500[0].Symbol.to_list()
-    # sp400 = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_400_companies')
-    # ticker_list_400 = sp400[0].Symbol.to_list()
-    # sp600 = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_600_companies')
-    # ticker_list_600 = sp600[0].Symbol.to_list()
-    # ticker_list = list(set(ticker_list_500 + ticker_list_400 + ticker_list_600))
+    sp400 = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_400_companies')
+    ticker_list_400 = sp400[0].Symbol.to_list()
+    sp600 = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_600_companies')
+    ticker_list_600 = sp600[0].Symbol.to_list()
+    ticker_list = list(set(ticker_list_500 + ticker_list_400 + ticker_list_600))
     ticker_list = sorted(list(set(ticker_list_500)))
     return ticker_list
 

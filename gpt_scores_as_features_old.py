@@ -32,7 +32,8 @@ def initialize_and_return_models():
     # os.environ["OPENAI_API_KEY"] = config_dict['openai_api_key']
     # load_dotenv("openai.env")
     # openai.api_key=os.getenv('OPENAI_API_KEY')
-    openai.api_key = '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'
+    ########################   SUBSTITUTE THE API KEY HERE TO OPEN_AI API_KEY ####################################### 
+    openai.api_key = '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'
     llm = OpenAI(model='gpt-3.5-turbo', temperature=0.5)
     embedding_model = LangchainEmbedding(
         HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
@@ -40,14 +41,16 @@ def initialize_and_return_models():
     return llm, embedding_model
 
 def load_target_dfs():
-    with open('/home/moningi-srija/Desktop/targets_train_df.pkl', 'rb') as handle:
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_TRAIN_DATAFRAME_PICKLE_FILE #######################################
+    with open('/home/moningi-srija/Desktop/gpu_downloads/targets_train_df.pkl', 'rb') as handle:
         df_train = pickle.load(handle)
-    with open('/home/moningi-srija/Desktop/targets_test_df.pkl', 'rb') as handle:
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_TEST_DATAFRAME_PICKLE_FILE #######################################
+    with open('/home/moningi-srija/Desktop/gpu_downloads/targets_test_df.pkl', 'rb') as handle:
         df_test = pickle.load(handle)
     #Convert report_date column to string representation
-    df_train['report_date'] = df_train['report_date'].apply(lambda x: x.date().strftime('%Y-%m-%d'))
+    # df_train['report_date'] = df_train['report_date'].apply(lambda x: x.date().strftime('%Y-%m-%d'))
     df_train.reset_index(drop=True, inplace=True)
-    df_test['report_date'] = df_test['report_date'].apply(lambda x: x.date().strftime('%Y-%m-%d'))
+    # df_test['report_date'] = df_test['report_date'].apply(lambda x: x.date().strftime('%Y-%m-%d'))
     df_test.reset_index(drop=True, inplace=True)
     return df_train, df_test
 
@@ -79,14 +82,6 @@ def get_gpt_generated_feature_dict(query_engine, questions_dict):
     response_dict = {}
     for feature_name, question in questions_dict.items():
         #Sleep for a short duration, not to exceed openai rate limits.
-        # while True:
-        #     try:
-        #         response = query_engine.query(question)
-        #         print("hiii\n")
-        #         break
-        #     except openai.error.RateLimitError:
-        #         print("Rate limit reached. Retrying in 20 seconds...")
-        #         time.sleep(20)
         response = query_engine.query(question)
         print("hiii\n")
         response_dict[feature_name] = int(eval(response.response)['score'])
@@ -159,16 +154,22 @@ def save_consolidated_df( questions_dict, targets_df,
     feature_cols = list(questions_dict.keys())
     feature_cols = ['feature_{}'.format(f) for f in feature_cols]
     meta_cols = ['meta_symbol', 'meta_report_date']
+    # i=0
     for df_path in df_paths_list:
+        # i=i+1
+        # print(i)
         with open(df_path, 'rb') as handle:
             gpt_feature_df = pickle.load(handle)
-            print(gpt_feature_df)
         gpt_feature_df = gpt_feature_df.loc[:, feature_cols + meta_cols].copy()
         feature_df_full = pd.concat([feature_df_full, gpt_feature_df], ignore_index=True)
+        # print(feature_df_full)
     #Convert meta_report_date column to datetime format
-    feature_df_full['meta_report_date'] = feature_df_full['meta_report_date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
+    # targets_df['meta_report_date'] = pd.to_datetime(targets_df['meta_report_date'])
+    # feature_df_full['meta_report_date'] = feature_df_full['meta_report_date'].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
+    # print(targets_df)
     merged_df = pd.merge(feature_df_full, targets_df, left_on=['meta_symbol', 'meta_report_date'],
                         right_on=['symbol', 'report_date'], how='inner')
+    # print(merged_df)
     #Transform features in range [0,1]
     merged_df[feature_cols] = merged_df[feature_cols]/100.0
     with open(final_df_save_path, 'wb') as handle:
@@ -177,25 +178,30 @@ def save_consolidated_df( questions_dict, targets_df,
 def main(args):
     # with open(args.config_path) as json_file:
     #     config_dict = json.load(json_file)
-    with open("/home/moningi-srija/Desktop/questions.json") as json_file:
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF QUESTIONS.JSON FILE #######################################
+    with open("/home/moningi-srija/Desktop/gpu_downloads/questions.json") as json_file:
         questions_dict = json.load(json_file)
     
     df_train, df_test = load_target_dfs()
     llm, embedding_model = initialize_and_return_models()
 
-    save_features(df_train, llm, embedding_model, "/home/moningi-srija/Desktop", questions_dict,
-                  embeddings_directory="/home/moningi-srija/Desktop/embeddings_for_training.pkl",
-                  features_save_directory='media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/feature_train3')
-    save_features(df_test, llm, embedding_model, '/home/moningi-srija/Desktop', questions_dict,
-                  embeddings_directory='/home/moningi-srija/Desktop/embeddings_for_testing.pkl',
-                  features_save_directory='media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/feature_test3')
+    ########################   SUBSTITUTE THE PATHS HERE TO PATHS OF EMBEDDINGS OF TRAINING DATA DIRECTORY ############################
+    save_features(df_train, llm, embedding_model, "/home/moningi-srija/Desktop/gpu_downloads", questions_dict,
+                  embeddings_directory="/home/moningi-srija/Desktop/gpu_downloads/embeddings_for_training",
+                  features_save_directory='/home/moningi-srija/Desktop/gpu_downloads/feature_train')
+    ########################   SUBSTITUTE THE PATHS HERE TO PATHS OF EMBEDDINGS OF TESTING DATA DIRECTORY ############################
+    save_features(df_test, llm, embedding_model, '/home/moningi-srija/Desktop/gpu_downloads', questions_dict,
+                  embeddings_directory='/home/moningi-srija/Desktop/gpu_downloads/embeddings_for_testing',
+                  features_save_directory='/home/moningi-srija/Desktop/gpu_downloads/feature_test')
     
+    ########################   SUBSTITUTE THE PATHS HERE TO PATHS OF FEATURE_TRAIN_DATAFRAMES_SAVE_DIRECTORY AND FINAL_TRAIN_DATAFRAME_PICKLE_FILE ############################
     save_consolidated_df(questions_dict, df_train,
-                         features_save_directory='media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/feature_train3',
-                         final_df_save_path='media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/final_train3')
+                         features_save_directory='/home/moningi-srija/Desktop/gpu_downloads/feature_train',
+                         final_df_save_path='/home/moningi-srija/Desktop/gpu_downloads/final_train.pkl')
+    ########################   SUBSTITUTE THE PATHS HERE TO PATHS OF FEATURE_TEST_DATAFRAMES_SAVE_DIRECTORY AND FINAL_TEST_DATAFRAME_PICKLE_FILE ############################
     save_consolidated_df(questions_dict, df_test,
-                         features_save_directory='/media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/feature_test3',
-                         final_df_save_path='media/moningi-srija/Seagate\ Backup\ Plus\ Drive/ai_ml/GPT-InvestAR-main/final_test3')
+                         features_save_directory='/home/moningi-srija/Desktop/gpu_downloads/feature_test',
+                         final_df_save_path='/home/moningi-srija/Desktop/gpu_downloads/final_test.pkl')
 
 
 if __name__ == '__main__':

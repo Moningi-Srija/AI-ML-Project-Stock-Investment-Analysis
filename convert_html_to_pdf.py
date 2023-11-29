@@ -16,6 +16,7 @@ def main(args):
     # with open(args.config_path) as json_file:
     #     config_dict = json.load(json_file)
     #Get directory paths for all symbols as a list
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_HTML_SAVE_DIRECTORY ####################################### 
     symbol_paths = [folder for folder in glob.glob(os.path.join("/home/moningi-srija/Desktop/150-200", '*')) 
                         if os.path.isdir(folder)]
     for i, symbol_path in enumerate(symbol_paths):
@@ -32,6 +33,7 @@ def main(args):
             #ar_paths should be a list of 1 element only i.e the report
             assert len(ar_paths)==1
             date = ar_dates_symbol_path.split('/')[-1]
+            ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_PDF_SAVE_DIRECTORY ####################################### 
             pdf_save_dir = os.path.join("/home/moningi-srija/Desktop/pdf1_150-200", symbol, date)
             pdf_save_path = os.path.join(pdf_save_dir, date+'.pdf')
             #If path exists, then the conversion has already happened before

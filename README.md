@@ -13,5 +13,5 @@ This repo contains the code files of CS 337 Course Project
 9. __view_pkl.py__: converts pkl file to csv file.
 10. __requirements.txt__: Contains the info about all the packages with versions used in the project.
 
-The order of running files are download_10k.py -> convert_html_to_pdf.py -> mmake_targets.py -> embeddings_save_gpu.py -> gpt_scores_as_features_old.py -> modelling_and_return_estimation.ipynb.
+The order of running files are download_10k.py -> convert_html_to_pdf.py -> make_targets.py -> embeddings_save_gpu.py -> gpt_scores_as_features_old.py -> modelling_and_return_estimation.ipynb.
 The paths to folders should be changed to the local system file paths while running following the comments in the files.

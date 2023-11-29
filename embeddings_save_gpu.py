@@ -12,6 +12,7 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 import chromadb
 import openai
 
+########################   SUBSTITUTE THE API KEY HERE TO OPEN_AI API KEY ####################################### 
 openai.api_key = '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'
 CHUNK_SIZE = 512
 CHUNK_OVERLAP = 32
@@ -28,6 +29,7 @@ def save_index(embeddings_path, embedding_model, symbol, ar_date):
     service_context = ServiceContext.from_defaults(embed_model=embedding_model,
                                                   chunk_size = CHUNK_SIZE, 
                                                   chunk_overlap=CHUNK_OVERLAP)
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_PDF_SAVE_DIRECTORY ####################################### 
     ar_filing_path = os.path.join("/users/ug21/manasibingle/pdf_data/pdf", symbol, ar_date)
     documents = SimpleDirectoryReader(ar_filing_path).load_data()
     _ = VectorStoreIndex.from_documents(
@@ -48,13 +50,16 @@ def save_embeddings(df, embedding_model, save_directory):
         print("Completed: {}, {}, {} in {:.2f}s".format(i+1, symbol, ar_date, time.time()-start_time))
 
 def save_dfs(df_train, df_test):
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_TRAIN_DATAFRAME_PICKLE_FILE ####################################### 
     with open("/users/ug21/manasibingle/pdf_data/targets_train_df.pkl", 'wb') as handle:
         pickle.dump(df_train, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_TEST_DATAFRAME_PICKLE_FILE #######################################
     with open('/users/ug21/manasibingle/pdf_data/targets_test_df.pkl', 'wb') as handle:
         pickle.dump(df_test, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def main():
     #Read the targets df generated from make_targets.py
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_DATAFRAME_PKL_FILE #######################################
     with open('/users/ug21/manasibingle/pdf_data/targets_fulldata_df.pkl', 'rb') as handle:
         df_targets = pickle.load(handle)
     df_targets_train = df_targets.loc[lambda x: x.era <= TRAIN_CUTOFF_YEAR].reset_index(drop=True)
@@ -65,8 +70,10 @@ def main():
     embedding_model = LangchainEmbedding(
         HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
     )
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TRAINING_DATA_EMBEDDINGS_SAVE_DIRECTORY #######################################
     save_embeddings(df_targets_train_sampled, embedding_model, 
                     "/users/ug21/manasibingle/pdf_data/embeddings_for_training")
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TESTING_DATA_EMBEDDINGS_SAVE_DIRECTORY #######################################
     save_embeddings(df_targets_test_sampled, embedding_model, 
                     "/users/ug21/manasibingle/pdf_data/embeddings_for_testing")
     

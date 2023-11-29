@@ -44,6 +44,7 @@ def main(args):
         check_saved_path = os.path.join('https://financialmodelingprep.com/api/v3/sec_filings/{}?type=10-K&page=0&apikey={}', ticker)
         if os.path.exists(check_saved_path):
             continue
+        ########################   SUBSTITUTE THE KEY HERE TO FINANCIAL_MODELLING_API KEY ####################################### 
         fmp_10k_url = 'https://financialmodelingprep.com/api/v3/sec_filings/{}?type=10-K&page=0&apikey={}'.format(ticker,
                                                                                                                   "41909326db0bb0740658aa1c86597b32")
         response = requests.get(fmp_10k_url)
@@ -57,6 +58,7 @@ def main(args):
             if int(year) < 2002:
                 continue
             link = d['finalLink']
+            ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_HTML_SAVE_DIRECTORY ####################################### 
             save_path_directory = os.path.join("/media/moningi-srija/Seagate Backup Plus Drive/ai_ml/GPT-InvestAR-main/data/html", ticker, date)
             if not os.path.exists(save_path_directory):
                 os.makedirs(save_path_directory)

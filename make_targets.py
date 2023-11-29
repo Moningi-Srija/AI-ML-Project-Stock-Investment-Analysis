@@ -14,6 +14,7 @@ def get_ar_dates(symbol):
     '''
     Returns: The annual report dates for each symbol.
     '''
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_PDF_SAVE_DIRECTORY ####################################### 
     symbol_path = os.path.join("/media/moningi-srija/Seagate Backup Plus Drive/ai_ml/GPT-InvestAR-main/data/pdf", symbol)
     # symbol_path = os.path.join("/home/moningi-srija/Desktop/pdf_check", symbol)
     folder_names = [os.path.basename(folder) for folder in glob.glob(os.path.join(symbol_path, '*')) \
@@ -144,6 +145,7 @@ def make_targets_all_symbols(start_date, end_date):
     '''
     Function to return the complete dataframe for all symbols and all annual report date periods
     '''
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF REPORTS_PDF_SAVE_DIRECTORY ####################################### 
     symbol_names = [os.path.basename(folder) for folder in glob.glob(os.path.join("/media/moningi-srija/Seagate Backup Plus Drive/ai_ml/GPT-InvestAR-main/data/pdf", '*')) \
                             if os.path.isdir(folder)]
     # symbol_names = [os.path.basename(folder) for folder in glob.glob(os.path.join("/home/moningi-srija/Desktop/pdf_check", '*')) \
@@ -223,6 +225,7 @@ def main():
                                     .apply(lambda df: bin_targets(df, input_col_target, output_col_target, 
                                                                     [0, 0.2, 0.4, 0.6, 0.8, 1.0], 
                                                                     ['0.0', '0.25', '0.5', '0.75', '1.0']))
+    ########################   SUBSTITUTE THE PATH HERE TO PATH OF TARGETS_DATAFRAME_PKL_FILE ####################################### 
     with open("/home/moningi-srija/Desktop/targets_fulldata_df.pkl", 'wb') as handle:
         pickle.dump(targets_df_filtered_dedup, handle, protocol=pickle.HIGHEST_PROTOCOL)
 

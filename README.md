@@ -1,7 +1,6 @@
 # AI-ML-Project-Stock-Investment-Analysis
 This repo contains the code files of CS 337 Course Project
 
-The listed files are
 
 1. __download_10k.py__: This code gets the list of stocks from wikipedia, uses them to find the link to their corresponding to 10-K filings htmls from financial modelling prep API. The 10-K filings will be obtained from SEC-Edgar Database from SEC Website.
 2. __convert_html_to_pdf.py__: This converts all html files to pdfs. PDFs are preferred due to their token efficiency for further analysis.
